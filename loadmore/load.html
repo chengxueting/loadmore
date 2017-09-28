@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+</head>
+<style>
+	.ct{
+		list-style: none;
+	}
+	.load-more{
+		text-decoration: none;
+		padding: 10px;
+		background: rgba(84,255,159,0.4);
+		border-radius: 5px;
+		font-family: '楷体';
+	}
+	.load-more:hover{
+		background: rgba(255,255,0,0.4);
+	}
+	.ct li{
+	    list-style:none;
+        border: 1px solid #ccc;
+        padding: 10px;
+        margin-top: 10px;
+        cursor:pointer;
+
+	}
+</style>
+<body>
+	<ul class='ct'></ul>
+	<a href="#" class='load-more'>加载更多</a>
+	<script>
+		var pageIndex=0
+		var ct=document.querySelector('.ct')
+		var btn=document.querySelector('.load-more')
+		btn.addEventListener('click',function(){
+			var XMLHttp=new XMLHttpRequest()
+			XMLHttp.open('get','/loadmore?index='+pageIndex+'&length=5',true)
+			XMLHttp.send()
+			XMLHttp.onreadystatechange=function(){
+				if(XMLHttp.readyState===4&&(XMLHttp.status===200||XMLHttp.status===304)){
+					var results=JSON.parse(XMLHttp.responseText)
+					var fragment=document.createDocumentFragment()
+					for(var i=0;i<results.length;i++){
+						var node=document.createElement('li')
+						node.innerText=results[i]
+						fragment.appendChild(node)
+						
+					}
+					ct.appendChild(fragment)
+					pageIndex=pageIndex+5
+				}
+			}
+
+		})
+	</script>
+</body>
+</html>
